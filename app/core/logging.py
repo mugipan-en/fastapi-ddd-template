@@ -44,7 +44,7 @@ def setup_logging() -> None:
     if settings.LOG_FORMAT == "json":
         # JSON logging for production
         structlog.configure(
-            processors=shared_processors + [structlog.processors.JSONRenderer()],
+            processors=[*shared_processors, structlog.processors.JSONRenderer()],
             wrapper_class=structlog.stdlib.BoundLogger,
             logger_factory=structlog.stdlib.LoggerFactory(),
             cache_logger_on_first_use=True,
@@ -52,7 +52,7 @@ def setup_logging() -> None:
     else:
         # Human-readable logging for development
         structlog.configure(
-            processors=shared_processors + [structlog.dev.ConsoleRenderer(colors=True)],
+            processors=[*shared_processors, structlog.dev.ConsoleRenderer(colors=True)],
             wrapper_class=structlog.stdlib.BoundLogger,
             logger_factory=structlog.stdlib.LoggerFactory(),
             cache_logger_on_first_use=True,

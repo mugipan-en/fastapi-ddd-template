@@ -59,7 +59,7 @@ class TestAuthAPI:
     @pytest.mark.asyncio
     async def test_login_success(self, client: AsyncClient, test_user: User):
         """Test successful login."""
-        login_data = {"email": test_user.email, "password": "testpassword123"}
+        login_data = {"email": test_user.email, "password": "TestPassword123"}
 
         response = await client.post("/api/v1/auth/login", json=login_data)
         assert response.status_code == 200
@@ -93,7 +93,7 @@ class TestAuthAPI:
     async def test_refresh_token_success(self, client: AsyncClient, test_user: User):
         """Test successful token refresh."""
         # First login to get tokens
-        login_data = {"email": test_user.email, "password": "testpassword123"}
+        login_data = {"email": test_user.email, "password": "TestPassword123"}
 
         response = await client.post("/api/v1/auth/login", json=login_data)
         assert response.status_code == 200
@@ -141,8 +141,8 @@ class TestAuthAPI:
     ):
         """Test successful password change."""
         password_data = {
-            "current_password": "testpassword123",
-            "new_password": "newtestpassword123",
+            "current_password": "TestPassword123",
+            "new_password": "NewTestPassword123",
         }
 
         response = await client.post(
@@ -158,7 +158,7 @@ class TestAuthAPI:
         """Test password change with wrong current password."""
         password_data = {
             "current_password": "wrongpassword",
-            "new_password": "newtestpassword123",
+            "new_password": "NewTestPassword123",
         }
 
         response = await client.post(
@@ -173,7 +173,7 @@ class TestAuthAPI:
     ):
         """Test password change with weak new password."""
         password_data = {
-            "current_password": "testpassword123",
+            "current_password": "TestPassword123",
             "new_password": "weak",  # Too short
         }
 

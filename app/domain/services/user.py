@@ -40,14 +40,8 @@ class UserService:
                 "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number"
             )
 
-        # Hash password
-        user_data_dict = user_data.model_dump()
-        user_data_dict["hashed_password"] = get_password_hash(user_data.password)
-        del user_data_dict["password"]
-
-        # Create user
-        user_create = UserCreate.model_validate(user_data_dict)
-        return await self.user_repository.create(user_create)
+        # Create user directly - repository will handle password hashing
+        return await self.user_repository.create(user_data)
 
     async def change_password(
         self, user_id: int, current_password: str, new_password: str
@@ -89,9 +83,7 @@ class UserService:
             return False
         if not re.search(r"[a-z]", password):
             return False
-        if not re.search(r"\d", password):
-            return False
-        return True
+        return bool(re.search(r"\d", password))
 
     async def deactivate_user(self, user_id: int, admin_user_id: int) -> bool:
         """Deactivate user (admin only)."""

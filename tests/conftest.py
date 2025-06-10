@@ -1,12 +1,11 @@
 """Test configuration and fixtures."""
 
-import os
 import asyncio
+import os
 from collections.abc import AsyncGenerator, Generator
 
 import pytest
 import pytest_asyncio
-from fastapi.testclient import TestClient
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
@@ -100,7 +99,7 @@ async def test_user(user_repository: SQLUserRepository) -> User:
     """Create a test user."""
     user_data = UserCreate(
         email="test@example.com",
-        password="testpassword123",
+        password="TestPassword123",
         first_name="Test",
         last_name="User",
         role=UserRole.USER,
@@ -136,7 +135,7 @@ async def test_post(post_repository: SQLPostRepository, test_user: User) -> Post
 @pytest_asyncio.fixture
 async def auth_headers(client: AsyncClient, test_user: User) -> dict:
     """Get authentication headers for test user."""
-    login_data = {"email": test_user.email, "password": "testpassword123"}
+    login_data = {"email": test_user.email, "password": "TestPassword123"}
     response = await client.post("/api/v1/auth/login", json=login_data)
     assert response.status_code == 200
 

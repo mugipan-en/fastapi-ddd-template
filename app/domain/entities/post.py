@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
-    from .user import User
+    from .user import User, UserResponse
 
 
 class PostStatus(str, Enum):
@@ -117,7 +117,7 @@ class PostWithAuthor(PostResponse):
     author: "UserResponse"
 
 
-# Import to resolve forward references
-from .user import UserResponse
-
-PostWithAuthor.model_rebuild()
+# Rebuild models after all imports are completed
+def rebuild_models():
+    """Rebuild models to resolve forward references."""
+    PostWithAuthor.model_rebuild()

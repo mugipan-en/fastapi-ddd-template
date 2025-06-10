@@ -23,7 +23,6 @@ class SQLUserRepository(UserRepository):
         user_dict = user_data.model_dump()
         user_dict["hashed_password"] = get_password_hash(user_data.password)
         del user_dict["password"]
-
         # Create user
         user = User(**user_dict)
         self.session.add(user)
