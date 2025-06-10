@@ -39,9 +39,8 @@ app/
 git clone https://github.com/mugipan-en/fastapi-ddd-template.git
 cd fastapi-ddd-template
 
-# 仮想環境を作成・アクティベート
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+# uvをインストール（未インストールの場合）
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # 依存関係をインストール
 make setup
