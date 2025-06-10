@@ -121,4 +121,5 @@ class PostWithAuthor(PostResponse):
 def rebuild_models():
     """Rebuild models to resolve forward references."""
     from .user import UserResponse  # noqa: F401
+
     PostWithAuthor.model_rebuild()
