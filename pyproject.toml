@@ -32,7 +32,7 @@ dependencies = [
     "sqlmodel>=0.0.8",
     "psycopg2-binary>=2.9.5",
     "alembic>=1.12.0",
-    "pydantic>=2.0.0",
+    "pydantic[email]>=2.0.0",
     "pydantic-settings>=2.0.0",
     "python-jose[cryptography]>=3.3.0",
     "passlib[bcrypt]>=1.7.4",
@@ -42,6 +42,7 @@ dependencies = [
     "httpx>=0.24.0",
     "prometheus-client>=0.16.0",
     "structlog>=23.1.0",
+    "aiosqlite>=0.19.0",
 ]
 
 [project.optional-dependencies]
