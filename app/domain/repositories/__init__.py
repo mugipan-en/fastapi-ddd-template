@@ -1,6 +1,6 @@
 """Domain repositories package."""
 
-from .user import UserRepository
 from .post import PostRepository
+from .user import UserRepository
 
-__all__ = ["UserRepository", "PostRepository"]
+__all__ = ["PostRepository", "UserRepository"]

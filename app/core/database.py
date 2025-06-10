@@ -1,16 +1,18 @@
 """Database configuration and session management."""
 
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
 
-from sqlmodel import SQLModel, create_engine, Session
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
+from sqlmodel import Session, SQLModel, create_engine
 
 from app.core.config import settings
 
 # Create sync engine for Alembic migrations
 sync_engine = create_engine(
-    str(settings.DATABASE_URL).replace("postgresql://", "postgresql://").replace("postgresql+asyncpg://", "postgresql://"),
+    str(settings.DATABASE_URL)
+    .replace("postgresql://", "postgresql://")
+    .replace("postgresql+asyncpg://", "postgresql://"),
     echo=settings.DEBUG,
     pool_pre_ping=True,
     pool_recycle=300,

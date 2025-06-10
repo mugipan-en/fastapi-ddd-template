@@ -2,12 +2,13 @@
 
 import asyncio
 from datetime import datetime
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import async_engine, create_tables
-from app.domain.entities.user import User, UserRole
-from app.domain.entities.post import Post, PostStatus
 from app.core.security import get_password_hash
+from app.domain.entities.post import Post, PostStatus
+from app.domain.entities.user import User, UserRole
 
 
 async def create_sample_users(session: AsyncSession) -> list[User]:
@@ -23,7 +24,7 @@ async def create_sample_users(session: AsyncSession) -> list[User]:
             "is_verified": True,
         },
         {
-            "email": "moderator@example.com", 
+            "email": "moderator@example.com",
             "hashed_password": get_password_hash("mod123"),
             "first_name": "Moderator",
             "last_name": "User",
@@ -35,7 +36,7 @@ async def create_sample_users(session: AsyncSession) -> list[User]:
             "email": "user@example.com",
             "hashed_password": get_password_hash("user123"),
             "first_name": "Regular",
-            "last_name": "User", 
+            "last_name": "User",
             "role": UserRole.USER,
             "is_active": True,
             "is_verified": True,
@@ -50,19 +51,19 @@ async def create_sample_users(session: AsyncSession) -> list[User]:
             "is_verified": False,
         },
     ]
-    
+
     users = []
     for user_data in users_data:
         user = User(**user_data)
         session.add(user)
         users.append(user)
-    
+
     await session.commit()
-    
+
     # Refresh to get IDs
     for user in users:
         await session.refresh(user)
-    
+
     return users
 
 
@@ -188,51 +189,51 @@ More content coming soon...
             "user_id": users[3].id,  # John Doe
         },
     ]
-    
+
     posts = []
     for post_data in posts_data:
         post = Post(**post_data)
         session.add(post)
         posts.append(post)
-    
+
     await session.commit()
-    
+
     # Refresh to get IDs
     for post in posts:
         await session.refresh(post)
-    
+
     return posts
 
 
 async def seed_database():
     """Seed the database with sample data."""
     print("🌱 Starting database seeding...")
-    
+
     # Create tables
     await create_tables()
     print("📊 Database tables created")
-    
+
     # Create session
-    from sqlalchemy.orm import sessionmaker
     from sqlalchemy.ext.asyncio import AsyncSession
-    
+    from sqlalchemy.orm import sessionmaker
+
     AsyncSessionLocal = sessionmaker(
         bind=async_engine,
         class_=AsyncSession,
         expire_on_commit=False,
     )
-    
+
     async with AsyncSessionLocal() as session:
         # Create sample users
         print("👥 Creating sample users...")
         users = await create_sample_users(session)
         print(f"✅ Created {len(users)} users")
-        
+
         # Create sample posts
         print("📝 Creating sample posts...")
         posts = await create_sample_posts(session, users)
         print(f"✅ Created {len(posts)} posts")
-    
+
     print("🎉 Database seeding completed!")
     print("\n📋 Sample Accounts:")
     print("Admin: admin@example.com / admin123")

@@ -1,21 +1,26 @@
 """API schemas package."""
 
-from .auth import TokenResponse, LoginRequest, RegisterRequest
-from .user import UserResponse, UserCreateRequest, UserUpdateRequest
-from .post import PostResponse, PostCreateRequest, PostUpdateRequest, PostWithAuthorResponse
-from .common import PaginatedResponse, ErrorResponse
+from .auth import LoginRequest, RegisterRequest, TokenResponse
+from .common import ErrorResponse, PaginatedResponse
+from .post import (
+    PostCreateRequest,
+    PostResponse,
+    PostUpdateRequest,
+    PostWithAuthorResponse,
+)
+from .user import UserCreateRequest, UserResponse, UserUpdateRequest
 
 __all__ = [
-    "TokenResponse",
-    "LoginRequest", 
-    "RegisterRequest",
-    "UserResponse",
-    "UserCreateRequest",
-    "UserUpdateRequest",
-    "PostResponse",
+    "ErrorResponse",
+    "LoginRequest",
+    "PaginatedResponse",
     "PostCreateRequest",
+    "PostResponse",
     "PostUpdateRequest",
     "PostWithAuthorResponse",
-    "PaginatedResponse",
-    "ErrorResponse",
+    "RegisterRequest",
+    "TokenResponse",
+    "UserCreateRequest",
+    "UserResponse",
+    "UserUpdateRequest",
 ]

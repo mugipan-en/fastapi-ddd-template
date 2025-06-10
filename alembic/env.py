@@ -35,13 +35,17 @@ def get_database_url():
     """Get database URL from environment or config."""
     import os
     from app.core.config import settings
-    
+
     # Use environment variable if available, otherwise use settings
     database_url = os.getenv("DATABASE_URL")
     if database_url:
         return database_url
-    
-    return str(settings.DATABASE_URL).replace("postgresql://", "postgresql://").replace("postgresql+asyncpg://", "postgresql://")
+
+    return (
+        str(settings.DATABASE_URL)
+        .replace("postgresql://", "postgresql://")
+        .replace("postgresql+asyncpg://", "postgresql://")
+    )
 
 
 def run_migrations_offline() -> None:
@@ -83,7 +87,7 @@ async def run_async_migrations() -> None:
     """
     configuration = config.get_section(config.config_ini_section)
     configuration["sqlalchemy.url"] = get_database_url()
-    
+
     connectable = async_engine_from_config(
         configuration,
         prefix="sqlalchemy.",

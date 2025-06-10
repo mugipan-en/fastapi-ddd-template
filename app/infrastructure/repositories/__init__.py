@@ -1,6 +1,6 @@
 """Infrastructure repositories package."""
 
-from .user import SQLUserRepository
 from .post import SQLPostRepository
+from .user import SQLUserRepository
 
-__all__ = ["SQLUserRepository", "SQLPostRepository"]
+__all__ = ["SQLPostRepository", "SQLUserRepository"]

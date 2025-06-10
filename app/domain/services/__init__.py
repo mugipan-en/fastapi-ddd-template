@@ -1,6 +1,6 @@
 """Domain services package."""
 
-from .user import UserService
 from .post import PostService
+from .user import UserService
 
-__all__ = ["UserService", "PostService"]
+__all__ = ["PostService", "UserService"]

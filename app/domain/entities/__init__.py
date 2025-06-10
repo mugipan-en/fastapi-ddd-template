@@ -1,6 +1,6 @@
 """Domain entities package."""
 
-from .user import User, UserRole
 from .post import Post, PostStatus
+from .user import User, UserRole
 
-__all__ = ["User", "UserRole", "Post", "PostStatus"]
+__all__ = ["Post", "PostStatus", "User", "UserRole"]

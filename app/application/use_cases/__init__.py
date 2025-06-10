@@ -1,7 +1,7 @@
 """Use cases package."""
 
-from .user import UserUseCases
-from .post import PostUseCases
 from .auth import AuthUseCases
+from .post import PostUseCases
+from .user import UserUseCases
 
-__all__ = ["UserUseCases", "PostUseCases", "AuthUseCases"]
+__all__ = ["AuthUseCases", "PostUseCases", "UserUseCases"]

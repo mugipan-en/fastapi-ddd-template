@@ -1,31 +1,37 @@
 """Test configuration and fixtures."""
 
+import os
 import asyncio
+from collections.abc import AsyncGenerator, Generator
+
 import pytest
 import pytest_asyncio
-from typing import AsyncGenerator, Generator
+from fastapi.testclient import TestClient
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 
-from app.main import create_app
-from app.core.config import settings
-from app.core.database import get_async_session
-from app.domain.entities.user import User, UserCreate, UserRole
-from app.domain.entities.post import Post, PostCreate, PostStatus
-from app.infrastructure.repositories.user import SQLUserRepository
-from app.infrastructure.repositories.post import SQLPostRepository
+# Set test environment variables before importing app modules
+os.environ["SECRET_KEY"] = "test-secret-key"
+os.environ["JWT_SECRET_KEY"] = "test-jwt-secret-key"
+os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///./test.db"
+os.environ["REDIS_URL"] = "redis://localhost:6379"
+os.environ["ALLOWED_HOSTS"] = '["localhost", "127.0.0.1", "test", "testserver"]'
 
+from app.core.database import get_async_session
+from app.domain.entities.post import Post, PostCreate, PostStatus
+from app.domain.entities.user import User, UserCreate, UserRole
+from app.infrastructure.repositories.post import SQLPostRepository
+from app.infrastructure.repositories.user import SQLUserRepository
+from app.main import create_app
 
 # Test database URL
 TEST_DATABASE_URL = "sqlite+aiosqlite:///./test.db"
 
 # Create test engine
 test_engine = create_async_engine(
-    TEST_DATABASE_URL,
-    echo=False,
-    connect_args={"check_same_thread": False}
+    TEST_DATABASE_URL, echo=False, connect_args={"check_same_thread": False}
 )
 
 # Test session factory
@@ -49,10 +55,10 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
     """Create a test database session."""
     async with test_engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
-    
+
     async with TestSessionLocal() as session:
         yield session
-    
+
     async with test_engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.drop_all)
 
@@ -66,12 +72,14 @@ def app():
 @pytest_asyncio.fixture
 async def client(app, db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
     """Create a test HTTP client."""
+
     def get_test_db():
         return db_session
-    
+
     app.dependency_overrides[get_async_session] = get_test_db
-    
-    async with AsyncClient(app=app, base_url="http://test") as ac:
+
+    from httpx import ASGITransport
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
         yield ac
 
 
@@ -95,7 +103,7 @@ async def test_user(user_repository: SQLUserRepository) -> User:
         password="testpassword123",
         first_name="Test",
         last_name="User",
-        role=UserRole.USER
+        role=UserRole.USER,
     )
     return await user_repository.create(user_data)
 
@@ -108,7 +116,7 @@ async def test_admin(user_repository: SQLUserRepository) -> User:
         password="adminpassword123",
         first_name="Admin",
         last_name="User",
-        role=UserRole.ADMIN
+        role=UserRole.ADMIN,
     )
     return await user_repository.create(user_data)
 
@@ -120,7 +128,7 @@ async def test_post(post_repository: SQLPostRepository, test_user: User) -> Post
         title="Test Post",
         content="This is a test post content.",
         status=PostStatus.PUBLISHED,
-        tags="test,example"
+        tags="test,example",
     )
     return await post_repository.create(post_data, test_user.id)
 
@@ -128,13 +136,10 @@ async def test_post(post_repository: SQLPostRepository, test_user: User) -> Post
 @pytest_asyncio.fixture
 async def auth_headers(client: AsyncClient, test_user: User) -> dict:
     """Get authentication headers for test user."""
-    login_data = {
-        "email": test_user.email,
-        "password": "testpassword123"
-    }
+    login_data = {"email": test_user.email, "password": "testpassword123"}
     response = await client.post("/api/v1/auth/login", json=login_data)
     assert response.status_code == 200
-    
+
     token_data = response.json()
     return {"Authorization": f"Bearer {token_data['access_token']}"}
 
@@ -142,12 +147,9 @@ async def auth_headers(client: AsyncClient, test_user: User) -> dict:
 @pytest_asyncio.fixture
 async def admin_headers(client: AsyncClient, test_admin: User) -> dict:
     """Get authentication headers for admin user."""
-    login_data = {
-        "email": test_admin.email,
-        "password": "adminpassword123"
-    }
+    login_data = {"email": test_admin.email, "password": "adminpassword123"}
     response = await client.post("/api/v1/auth/login", json=login_data)
     assert response.status_code == 200
-    
+
     token_data = response.json()
     return {"Authorization": f"Bearer {token_data['access_token']}"}
