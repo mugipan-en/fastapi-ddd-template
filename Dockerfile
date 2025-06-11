@@ -1,5 +1,5 @@
 # Use Python 3.11 slim image
-FROM python:3.11-slim as base
+FROM python:3.11-slim AS base
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
@@ -19,9 +19,9 @@ RUN pip install uv
 # Set work directory
 WORKDIR /app
 
-# Copy dependency files and app/__init__.py for version info
-COPY pyproject.toml ./
-COPY app/__init__.py ./app/
+# Copy dependency files and required files for hatch
+COPY pyproject.toml README.md ./
+COPY app/ ./app/
 
 # Install dependencies
 RUN uv pip install --system -e .
