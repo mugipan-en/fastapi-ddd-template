@@ -55,6 +55,7 @@ dev = [
     "factory-boy>=3.3.0",
     "anyio>=4.0.0",
     "greenlet>=3.0.0",
+    "pre-commit>=3.0.0",
 ]
 lint = [
     "black>=23.0.0",

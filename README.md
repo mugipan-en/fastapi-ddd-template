@@ -104,7 +104,7 @@ erDiagram
         datetime created_at
         datetime updated_at
     }
-    
+
     Posts {
         int id PK
         int user_id FK
@@ -114,7 +114,7 @@ erDiagram
         datetime created_at
         datetime updated_at
     }
-    
+
     Users ||--o{ Posts : "creates"
 ```
 

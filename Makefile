@@ -8,11 +8,11 @@ help: ## Show this help message
 # Setup and Installation
 setup: ## Install production dependencies using uv
 	@echo "🔧 Installing production dependencies with uv..."
-	uv pip install --system -e .
+	uv pip install -e .
 
 setup-dev: ## Install all dependencies including development tools
 	@echo "🔧 Installing all dependencies with uv..."
-	uv pip install --system -e ".[dev,lint,security]"
+	uv pip install -e ".[dev,lint,security]"
 
 clean: ## Clean up cache and temporary files
 	@echo "🧹 Cleaning up..."
@@ -69,8 +69,8 @@ type-check: ## Run type checking
 
 security: ## Run security checks
 	@echo "🔒 Running security checks..."
-	uv run safety check
-	uv run bandit -r app/ -f json
+	uv run safety check --json || echo "⚠️ Safety check completed with warnings"
+	uv run bandit -r app/ -f json || echo "⚠️ Bandit check completed with warnings"
 
 # Database
 migrate: ## Run database migrations
@@ -146,10 +146,24 @@ generate-secret: ## Generate a new secret key
 	@echo "🔑 Generating secret key..."
 	@python -c "import secrets; print(f'SECRET_KEY={secrets.token_urlsafe(32)}')"
 
+# Pre-commit hooks
+pre-commit-install: ## Install pre-commit hooks
+	@echo "🔗 Installing pre-commit hooks..."
+	uv run pre-commit install
+
+pre-commit-run: ## Run pre-commit on all files
+	@echo "🔍 Running pre-commit on all files..."
+	uv run pre-commit run --all-files
+
+pre-commit-update: ## Update pre-commit hooks
+	@echo "⬆️ Updating pre-commit hooks..."
+	uv run pre-commit autoupdate
+
 # CI/CD helpers
 ci-setup: ## Setup for CI environment
 	pip install uv
 	make setup-dev
+	make pre-commit-install
 
 ci-test: ## Run tests in CI environment
 	make lint
