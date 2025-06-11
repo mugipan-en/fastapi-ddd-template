@@ -8,11 +8,11 @@ help: ## Show this help message
 # Setup and Installation
 setup: ## Install production dependencies using uv
 	@echo "🔧 Installing production dependencies with uv..."
-	uv pip install -e .
+	uv pip install --system -e .
 
 setup-dev: ## Install all dependencies including development tools
 	@echo "🔧 Installing all dependencies with uv..."
-	uv pip install -e ".[dev,lint,security]"
+	uv pip install --system -e ".[dev,lint,security]"
 
 clean: ## Clean up cache and temporary files
 	@echo "🧹 Cleaning up..."
@@ -24,84 +24,84 @@ clean: ## Clean up cache and temporary files
 # Development
 dev: ## Start development server
 	@echo "🚀 Starting development server..."
-	uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+	uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 dev-debug: ## Start development server with debug logging
 	@echo "🐛 Starting development server with debug logging..."
-	DEBUG=true uvicorn app.main:app --reload --host 0.0.0.0 --port 8000 --log-level debug
+	DEBUG=true uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000 --log-level debug
 
 # Testing
 test: ## Run tests
 	@echo "🧪 Running tests..."
-	pytest
+	uv run pytest
 
 test-cov: ## Run tests with coverage
 	@echo "🧪 Running tests with coverage..."
-	pytest --cov=app --cov-report=html --cov-report=term-missing
+	uv run pytest --cov=app --cov-report=html --cov-report=term-missing
 
 test-fast: ## Run tests excluding slow tests
 	@echo "⚡ Running fast tests..."
-	pytest -m "not slow"
+	uv run pytest -m "not slow"
 
 test-integration: ## Run only integration tests
 	@echo "🔧 Running integration tests..."
-	pytest -m integration
+	uv run pytest -m integration
 
 test-unit: ## Run only unit tests
 	@echo "🎯 Running unit tests..."
-	pytest -m unit
+	uv run pytest -m unit
 
 # Code Quality
 lint: ## Run all linting tools
 	@echo "🔍 Running linting tools..."
-	ruff check .
-	black --check .
-	mypy .
+	uv run ruff check .
+	uv run black --check .
+	uv run mypy .
 
 fmt: ## Format code
 	@echo "🎨 Formatting code..."
-	black .
-	ruff check . --fix
+	uv run black .
+	uv run ruff check . --fix
 
 type-check: ## Run type checking
 	@echo "🔍 Running type check..."
-	mypy .
+	uv run mypy .
 
 security: ## Run security checks
 	@echo "🔒 Running security checks..."
-	safety check
-	bandit -r app/ -f json
+	uv run safety check
+	uv run bandit -r app/ -f json
 
 # Database
 migrate: ## Run database migrations
 	@echo "📊 Running database migrations..."
-	alembic upgrade head
+	uv run alembic upgrade head
 
 migrate-auto: ## Generate automatic migration
 	@echo "📊 Generating automatic migration..."
 	@read -p "Enter migration message: " message; \
-	alembic revision --autogenerate -m "$$message"
+	uv run alembic revision --autogenerate -m "$$message"
 
 migrate-create: ## Create empty migration
 	@echo "📊 Creating empty migration..."
 	@read -p "Enter migration message: " message; \
-	alembic revision -m "$$message"
+	uv run alembic revision -m "$$message"
 
 migrate-history: ## Show migration history
 	@echo "📊 Migration history..."
-	alembic history
+	uv run alembic history
 
 migrate-current: ## Show current migration
 	@echo "📊 Current migration..."
-	alembic current
+	uv run alembic current
 
 migrate-rollback: ## Rollback one migration
 	@echo "📊 Rolling back one migration..."
-	alembic downgrade -1
+	uv run alembic downgrade -1
 
 seed: ## Seed database with initial data
 	@echo "🌱 Seeding database..."
-	python -m scripts.seed_data
+	uv run python -m scripts.seed_data
 
 # Docker
 docker-build: ## Build Docker image

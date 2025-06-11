@@ -35,7 +35,7 @@ async def get_auth_use_cases(
 async def login(
     credentials: LoginRequest,
     auth_use_cases: AuthUseCases = Depends(get_auth_use_cases),
-):
+) -> TokenResponse:
     """
     Authenticate user and return access tokens.
 
@@ -60,7 +60,7 @@ async def login(
 async def register(
     user_data: RegisterRequest,
     auth_use_cases: AuthUseCases = Depends(get_auth_use_cases),
-):
+) -> TokenResponse:
     """
     Register a new user account.
 
@@ -89,7 +89,7 @@ async def register(
 async def refresh_token(
     refresh_data: RefreshTokenRequest,
     auth_use_cases: AuthUseCases = Depends(get_auth_use_cases),
-):
+) -> RefreshTokenResponse:
     """
     Refresh access token using refresh token.
 
@@ -112,7 +112,7 @@ async def change_password(
     password_data: ChangePasswordRequest,
     current_user: User = Depends(get_current_active_user),
     auth_use_cases: AuthUseCases = Depends(get_auth_use_cases),
-):
+) -> SuccessResponse:
     """
     Change user password.
 

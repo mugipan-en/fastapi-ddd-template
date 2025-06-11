@@ -2,9 +2,9 @@
 
 from datetime import datetime
 
-from sqlalchemy import func, or_, select
+from sqlalchemy import func, or_
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlmodel import delete, update
+from sqlmodel import delete, desc, select, update
 
 from app.domain.entities.post import Post, PostCreate, PostStatus, PostUpdate
 from app.domain.repositories.post import PostRepository
@@ -56,7 +56,7 @@ class SQLPostRepository(PostRepository):
 
     async def get_all(self, skip: int = 0, limit: int = 100) -> list[Post]:
         """Get all posts with pagination."""
-        stmt = select(Post).offset(skip).limit(limit).order_by(Post.created_at.desc())
+        stmt = select(Post).offset(skip).limit(limit).order_by(desc(Post.created_at))
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
 
@@ -69,7 +69,7 @@ class SQLPostRepository(PostRepository):
             .where(Post.user_id == user_id)
             .offset(skip)
             .limit(limit)
-            .order_by(Post.created_at.desc())
+            .order_by(desc(Post.created_at))
         )
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
@@ -83,7 +83,7 @@ class SQLPostRepository(PostRepository):
             .where(Post.status == status)
             .offset(skip)
             .limit(limit)
-            .order_by(Post.created_at.desc())
+            .order_by(desc(Post.created_at))
         )
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
@@ -180,7 +180,7 @@ class SQLPostRepository(PostRepository):
             )
             .offset(skip)
             .limit(limit)
-            .order_by(Post.created_at.desc())
+            .order_by(desc(Post.created_at))
         )
 
         result = await self.session.execute(stmt)
@@ -197,7 +197,7 @@ class SQLPostRepository(PostRepository):
             .where(or_(*tag_conditions))
             .offset(skip)
             .limit(limit)
-            .order_by(Post.created_at.desc())
+            .order_by(desc(Post.created_at))
         )
 
         result = await self.session.execute(stmt)

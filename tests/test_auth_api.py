@@ -10,7 +10,7 @@ class TestAuthAPI:
     """Authentication API test cases."""
 
     @pytest.mark.asyncio
-    async def test_register_success(self, client: AsyncClient):
+    async def test_register_success(self, client: AsyncClient) -> None:
         """Test successful user registration."""
         user_data = {
             "email": "newuser@example.com",

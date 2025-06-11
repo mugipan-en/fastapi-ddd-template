@@ -90,7 +90,9 @@ class PostStatsResponse(BaseModel):
     published_count: int = Field(description="Number of published posts")
     draft_count: int = Field(description="Number of draft posts")
     archived_count: int = Field(description="Number of archived posts")
-    status_distribution: dict = Field(description="Post distribution by status")
+    status_distribution: dict[str, int] = Field(
+        description="Post distribution by status"
+    )
 
 
 class PostSearchResponse(BaseModel):

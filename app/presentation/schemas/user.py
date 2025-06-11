@@ -75,4 +75,4 @@ class UserStatsResponse(BaseModel):
     admin_count: int = Field(description="Number of admin users")
     moderator_count: int = Field(description="Number of moderator users")
     user_count: int = Field(description="Number of regular users")
-    role_distribution: dict = Field(description="User distribution by role")
+    role_distribution: dict[str, int] = Field(description="User distribution by role")

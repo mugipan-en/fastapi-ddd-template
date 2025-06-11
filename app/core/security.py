@@ -45,7 +45,7 @@ def verify_token(token: str) -> str:
         payload = jwt.decode(
             token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM]
         )
-        user_id: str = payload.get("sub")
+        user_id = payload.get("sub")
         if user_id is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -77,8 +77,8 @@ def verify_refresh_token(token: str) -> str:
         payload = jwt.decode(
             token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM]
         )
-        user_id: str = payload.get("sub")
-        token_type: str = payload.get("type")
+        user_id = payload.get("sub")
+        token_type = payload.get("type")
 
         if user_id is None or token_type != "refresh":
             raise HTTPException(
