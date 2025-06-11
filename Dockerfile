@@ -19,8 +19,9 @@ RUN pip install uv
 # Set work directory
 WORKDIR /app
 
-# Copy dependency files
+# Copy dependency files and app/__init__.py for version info
 COPY pyproject.toml ./
+COPY app/__init__.py ./app/
 
 # Install dependencies
 RUN uv pip install --system -e .
